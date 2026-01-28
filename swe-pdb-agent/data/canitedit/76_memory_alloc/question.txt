@@ -1,0 +1,1 @@
+Fix the buffer overflow when writing memory, make sure to not throw an exception.

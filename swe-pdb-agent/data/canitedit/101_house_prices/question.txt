@@ -1,0 +1,1 @@
+Add a method `estimate_location` that returns the estimated the appropriate location for this house, calculated by getting the average location of the top 5 most similar houses in terms of estimated price.

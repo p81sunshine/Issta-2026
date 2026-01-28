@@ -1,0 +1,1 @@
+I want compoundInterest to return the correct compound interest.

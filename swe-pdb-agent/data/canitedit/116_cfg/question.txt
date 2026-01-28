@@ -1,0 +1,13 @@
+`Parser.parse(inputs: List[Tokens])` currently parses the following grammar:
+stmt := expr ;
+      | if ( expr ) stmt
+      | other
+adapt it so that it parse the following grammar 
+stmt := expr ;
+      | if ( expr ) stmt
+      | for ( optexpr ; optexpr ; optexpr ) stmt
+      | other
+optexpr := expr 
+         | e
+
+Here, `stmt` and `optexpr` are nonterminals and the token `e` represents the empty string.

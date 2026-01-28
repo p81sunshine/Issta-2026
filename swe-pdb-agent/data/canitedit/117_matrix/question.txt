@@ -1,0 +1,1 @@
+the `determinant` method on the Matrix class should return the determinant of the given matrix but it currently does not.

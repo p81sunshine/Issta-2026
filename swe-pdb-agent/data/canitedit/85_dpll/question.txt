@@ -1,0 +1,1 @@
+Fix the solver, it does not backtrack on empty clauses.

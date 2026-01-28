@@ -1,0 +1,1 @@
+Add a function `strongly_connected_components(self) -> Dict[Node, int]:` to Graph which divides the graph into disjoint subsets where each node in a subset can be reached from any other node. Do not change any of the other methods in the classes.

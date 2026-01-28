@@ -1,0 +1,1 @@
+Edit the code to include a method `powermod` that computes modular exponentiation, a^b mod c, via successive squaring. Update `check_coprime_euler` with this new function.

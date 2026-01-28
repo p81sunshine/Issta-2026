@@ -1,0 +1,1 @@
+Fix the `calculate_all_properties` and `multi_apply` functions to have the signatures `calculate_all_properties(text, functions)` and `multi_apply(data, col, colnames, functions)`, respectively, so that both functions take in a list of functions to calculate the properties with, rather than just having hardcoded functions.

@@ -1,0 +1,17 @@
+from solution import *
+
+import math
+
+from solution import *
+
+import math
+
+from solution import *
+
+import math
+
+import numpy as np
+def test_pancake_sort_base():
+    assert pancake_sort([15, 79, 25, 38, 69]) == [15, 25, 38, 69, 79]
+    assert pancake_sort([98, 12, 54, 36, 85]) == [12, 36, 54, 85, 98]
+    assert pancake_sort([41, 42, 32, 12, 23]) == [12, 23, 32, 41, 42]

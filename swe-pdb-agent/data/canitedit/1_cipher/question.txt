@@ -1,0 +1,1 @@
+Create a new method `caesar_cipher` that creates a new cipher in `self.ciphers` that shifts every letter by a given amount.

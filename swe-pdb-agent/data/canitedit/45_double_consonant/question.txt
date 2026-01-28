@@ -1,0 +1,1 @@
+Modify double_consonant so that "th", "ch", and "ll" don't count as double consonants.

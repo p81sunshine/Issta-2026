@@ -1,0 +1,1 @@
+Make sure that there are no duplicate versions and duplicate dependencies when creating a `Package` or `PackageVersion`.

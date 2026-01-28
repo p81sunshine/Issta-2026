@@ -1,0 +1,1 @@
+Add a function `containsSpecialChar` that checks if a string contains a special character. Update `isPasswordStrong` to check for the presence of a special character in the password.

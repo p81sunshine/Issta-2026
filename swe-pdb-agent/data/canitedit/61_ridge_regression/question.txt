@@ -1,0 +1,1 @@
+Modify the current model to use L2 regularization, and tune the alpha value between 1 to 2, inclusive on both ends, in increments of 0.01.

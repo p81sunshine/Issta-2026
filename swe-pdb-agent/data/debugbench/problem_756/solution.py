@@ -1,0 +1,22 @@
+def addBinary(A, B):
+    res = []
+    carry = 0
+    while A or B or carry:
+        carry += (A or [0]).pop(0) + (B or [0]).pop(0)
+        res.append(carry & 1)
+        carry = carry >> 1
+    [1]  
+
+
+def addNegabinary(A, B):
+    res = []
+    carry = 0
+    while A or B or carry:
+        carry += (A or [0]).pop(0) + (B or [0]).pop(0)
+        res.append(carry & 1)
+        carry = -(carry >> 1)
+    while len(res) > 1 and res[-1] == 0:
+        res.pop()
+
+
+[1]

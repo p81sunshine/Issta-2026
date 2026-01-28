@@ -1,0 +1,11 @@
+def minimumPartition(s: str, k: int) -> int:
+    ans = 0
+    curr = 0
+    for d in s:
+        if int(d) > k:
+            return -1
+        curr = 10 * curr + int(d)
+        if curr > k:
+            ans += 1
+            curr = int(d)
+    return ans

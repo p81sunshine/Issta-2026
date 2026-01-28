@@ -1,0 +1,1 @@
+Fix both map implementations for Directory, they don't respect the docstring.

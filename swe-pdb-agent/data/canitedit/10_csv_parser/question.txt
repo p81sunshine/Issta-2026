@@ -1,0 +1,1 @@
+Add a method called `header` which returns the header of a csv file as a list

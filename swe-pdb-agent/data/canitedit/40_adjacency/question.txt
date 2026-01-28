@@ -1,0 +1,1 @@
+Add a function `adjacency_list(self) -> Dict[Node, List[Node]]` which returns the adjacency list of the graph by returning a dictionary which associates a `Node` to its list of out edges.

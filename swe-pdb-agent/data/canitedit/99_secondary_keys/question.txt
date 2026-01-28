@@ -1,0 +1,1 @@
+Add the ability to track hits, misses, and number of entries by adding `get_hits`, `get_misses`, and `get_num_entries` methods.

@@ -1,0 +1,17 @@
+from solution import *
+
+import math
+
+from solution import *
+
+import math
+
+from solution import *
+
+import math
+
+import numpy as np
+def test_count_list_base():
+    assert count_list([[1, 3], [5, 7], [9, 11], [13, 15, 17]]) == 4
+    assert count_list([[1, 2], [2, 3], [4, 5]]) == 3
+    assert count_list([[1, 0], [2, 0]]) == 2

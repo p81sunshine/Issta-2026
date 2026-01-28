@@ -1,0 +1,36 @@
+from solution import *
+
+def test_example_1():
+    recipes = ["bread"]
+    ingredients = [["yeast", "flour"]]
+    supplies = ["yeast", "flour", "corn"]
+    expected = ["bread"]
+    assert find_all_recipes(recipes, ingredients, supplies) == expected
+
+def test_example_2():
+    recipes = ["bread", "sandwich"]
+    ingredients = [["yeast", "flour"], ["bread", "meat"]]
+    supplies = ["yeast", "flour", "meat"]
+    expected = ["bread", "sandwich"]
+    assert find_all_recipes(recipes, ingredients, supplies) == expected
+
+def test_example_3():
+    recipes = ["bread", "sandwich", "burger"]
+    ingredients = [["yeast", "flour"], ["bread", "meat"], ["sandwich", "meat", "bread"]]
+    supplies = ["yeast", "flour", "meat"]
+    expected = ["bread", "sandwich", "burger"]
+    assert find_all_recipes(recipes, ingredients, supplies) == expected
+
+def test_missing_ingredient():
+    recipes = ["cake"]
+    ingredients = [["flour", "sugar", "eggs"]]
+    supplies = ["flour", "sugar"]
+    expected = []
+    assert find_all_recipes(recipes, ingredients, supplies) == expected
+
+def test_circular_dependency():
+    recipes = ["A", "B"]
+    ingredients = [["B"], ["A"]]
+    supplies = ["initial"]
+    expected = []
+    assert find_all_recipes(recipes, ingredients, supplies) == expected

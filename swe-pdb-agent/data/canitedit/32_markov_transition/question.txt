@@ -1,0 +1,1 @@
+Edit the code to include a method `translate_from_list(self, adj_list)` that creates a transition matrix based on the adjacency list (of type `Dict[int, List[int]]`).

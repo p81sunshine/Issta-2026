@@ -1,0 +1,1 @@
+Make the `distances_to` function support negative weights; but throw a `ValueError` if there are any negative cycles in the graph.

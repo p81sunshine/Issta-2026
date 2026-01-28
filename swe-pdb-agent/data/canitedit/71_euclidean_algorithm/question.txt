@@ -1,0 +1,1 @@
+Fix the code to correctly compute the LCM and GCD without running infinitely.

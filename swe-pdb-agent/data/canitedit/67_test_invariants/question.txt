@@ -1,0 +1,1 @@
+Write two functions `test_worker_invariants(w: Worker)` and `test_public_worker_invariants(w: PublicWorker)` that assert all the invariants of the classes on the given object.

@@ -1,0 +1,1 @@
+Edit the `buy_yarn` and `sell_yarn` methods in the `Store` class to calculate the price of the order rather than taking in an argument for it.

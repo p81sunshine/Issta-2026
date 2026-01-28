@@ -1,0 +1,1 @@
+Fix the `permutation_equality` function so it only returns True if each sublist of list A is paired with and equal to exactly one sublist from list B.

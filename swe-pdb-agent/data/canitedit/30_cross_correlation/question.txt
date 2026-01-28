@@ -1,0 +1,1 @@
+Change the `cross_correlation` method to take in an argument `padding`, which corresponds to the padding of a cross correlation operation.

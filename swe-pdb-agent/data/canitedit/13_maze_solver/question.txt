@@ -1,0 +1,1 @@
+Change the `solve` function to use A* with manhattan distance instead of using UCS.

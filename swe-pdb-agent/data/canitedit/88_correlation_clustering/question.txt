@@ -1,0 +1,1 @@
+Fix the error that in this code that causes the ValueError that the distance matrix 'X' must be symmetric.

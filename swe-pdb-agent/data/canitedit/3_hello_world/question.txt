@@ -1,0 +1,1 @@
+Make the name fully uppercase.

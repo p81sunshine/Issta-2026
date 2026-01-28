@@ -1,0 +1,1 @@
+Add a method "simpson" to the integrator class that takes in arguments of self and a function f that uses Simpson's method to integrate the given function.

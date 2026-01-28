@@ -1,0 +1,1 @@
+Fix an error in which the covariant matrix may not be definite positive

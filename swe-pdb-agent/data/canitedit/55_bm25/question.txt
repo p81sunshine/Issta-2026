@@ -1,0 +1,1 @@
+Optimize the bm25 algorithm by avoiding frequency calculations.

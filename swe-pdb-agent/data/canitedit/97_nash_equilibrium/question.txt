@@ -1,0 +1,1 @@
+Write a method `nash_equilibrium(self) -> List[Tuple[str, str]]` in the Game class that returns the nash equilibrium(s) as (s1, s2) pairs.

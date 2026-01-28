@@ -1,0 +1,1 @@
+Fix the condition in enqueue to prevent item overwriting when the queue is not full.

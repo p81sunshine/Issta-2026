@@ -1,0 +1,4 @@
+def is_decimal(num):
+    import re
+    dnumre = re.compile(r"""^[0-9]+(\.[0-9]{1,2})?$""")
+    return dnumre.match(num) is True

@@ -1,0 +1,1 @@
+Add a `max_num_tokens` parameter to the Trainer which limits the number of tokens that are defined.

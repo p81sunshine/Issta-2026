@@ -1,0 +1,1 @@
+Refactor the code to add a `against(self, other: 'Player') -> 'Player'` method to the Player class and move the logic from the `who_won` method into this new method.

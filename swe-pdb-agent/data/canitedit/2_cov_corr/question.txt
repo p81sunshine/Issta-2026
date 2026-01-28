@@ -1,0 +1,1 @@
+Flip the correlation function given to calculate the covariance instead using the Corr(X, Y), Var(X) and Var(Y). The new function should take in Corr(X, Y), Var(X) and Var(Y) in that order.

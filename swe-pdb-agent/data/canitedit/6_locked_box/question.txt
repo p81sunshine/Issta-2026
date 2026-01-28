@@ -1,0 +1,1 @@
+Remove the `duplicate` methods and add a new `peek` method to see the data inside the box. If the box is locked, `peek` should throw an error.

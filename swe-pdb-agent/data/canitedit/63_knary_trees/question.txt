@@ -1,0 +1,1 @@
+Add a method `count_leaves` that counts the number of leaf nodes in a given KNaryTree.

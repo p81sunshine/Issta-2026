@@ -1,0 +1,1 @@
+Make both the sudoku solver and verifier support the nine 3x3 subgrids that are in the original sudoku game.

@@ -1,0 +1,1 @@
+Change the code so that it supports a remove element method called `remove` that removes the first occurrence of a value.

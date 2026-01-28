@@ -1,0 +1,1 @@
+the method parse computes an expression represented as a list of tokens in post fix notation. Change it so that it raises an Exception when input is malformed.

@@ -1,0 +1,1 @@
+Fix how the alive neighbor count is calculated.

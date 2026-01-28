@@ -1,0 +1,29 @@
+from solution import *
+
+import math as Math
+
+def test_all():
+    def test_function(x: float) -> float:
+        return 2**x
+
+    integrator_one = integrator(1, 5, 0.0001)
+    assert abs(integrator_one.rectangle_left(test_function) - 30/Math.log(2)) < 0.1
+    assert abs(integrator_one.rectangle_middle(test_function) - 30/Math.log(2)) < 0.0001
+    assert abs(integrator_one.rectangle_right(test_function) - 30/Math.log(2)) < 0.1
+    assert abs(integrator_one.trapezoid(test_function) - 30/Math.log(2)) < 0.0001
+    assert abs(integrator_one.simpson(test_function) - 30/Math.log(2)) < 1
+    
+    num_steps = integrator_one.determine_num_steps_middle(test_function, 0.0001)
+    integratorNew = integrator(1, 5, 4/(num_steps+1))
+    assert abs(integratorNew.rectangle_middle(test_function) - (30/Math.log(2)) ) < 0.0001
+    
+    num_steps = integrator_one.determine_num_steps_trapezoid(test_function, 0.0001)
+    integratorNew = integrator(1, 5, 4/(num_steps+1))
+    assert abs(integratorNew.trapezoid(test_function) - (30/Math.log(2)) ) < 0.0001
+
+    assert abs(integrator_one.middle_error(test_function) / 4099865718.7686515) < 1.3 
+    assert abs(integrator_one.trapezoid_error(test_function)/ 7028341232.174831) < 1.3 
+    assert abs(4099865718.7686515 / integrator_one.middle_error(test_function)) < 1.3
+    assert abs(7028341232.174831 / integrator_one.trapezoid_error(test_function)) < 1.3
+    assert abs(integrator_one.M_search(test_function) - 32* (Math.log(2)**2)) < 0.1
+    assert integrator_one.simpson(test_function) == (5 - 1) * (test_function(5) + test_function(1) + 4*test_function(0.5*(5 + 1)) )/6

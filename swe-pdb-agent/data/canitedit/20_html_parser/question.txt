@@ -1,0 +1,1 @@
+Add support for HTML attributes to the parser and `HTMLElement` class.

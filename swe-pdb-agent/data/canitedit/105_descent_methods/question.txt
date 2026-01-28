@@ -1,0 +1,1 @@
+Fix the newtons_method_minimum() to converge to the correct extrema for the given function. Please use the grad() function to compute the gradient a function when necessary.

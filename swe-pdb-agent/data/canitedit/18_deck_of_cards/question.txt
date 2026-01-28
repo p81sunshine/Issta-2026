@@ -1,0 +1,1 @@
+Implement the `draw` method in the deck class to draw a card from the front of the deck, and the `receive_card` method in the player class to give a card to the player.

@@ -1,0 +1,1 @@
+Edit the schnorr zero knowledge protocol to be non-interactive. That is, in the zero knowledge procedure replace the `verifier_challenge` function with a function `hash_to_challenge` that uses the prover commitment, the public key, and the given prime to generate a secure challenge.

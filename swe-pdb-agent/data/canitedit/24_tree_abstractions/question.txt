@@ -1,0 +1,1 @@
+Change `Tree` and its subclasses not modify in place and be chainable.

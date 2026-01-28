@@ -1,0 +1,1 @@
+fix the k-nearest neighbors method on the Point class.

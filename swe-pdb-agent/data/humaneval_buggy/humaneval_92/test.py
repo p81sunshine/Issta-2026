@@ -1,0 +1,24 @@
+from solution import *
+
+import math
+
+from solution import *
+
+import math
+
+from solution import *
+
+import math
+
+import numpy as np
+def test_any_int_base():
+    assert any_int(2, 3, 1) == True
+    assert any_int(2.5, 2, 3) == False
+    assert any_int(1.5, 5, 3.5) == False
+    assert any_int(2, 6, 2) == False
+    assert any_int(4, 2, 2) == True
+    assert any_int(2.2, 2.2, 2.2) == False
+    assert any_int(-4, 6, 2) == True
+    assert any_int(2, 1, 1) == True
+    assert any_int(3, 4, 7) == True
+    assert any_int(3.0, 4, 7) == False

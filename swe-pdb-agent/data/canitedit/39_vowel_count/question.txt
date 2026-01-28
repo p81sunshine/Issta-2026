@@ -1,0 +1,1 @@
+Change vowel_count() so diphthongs don't count as vowels. A diphthong is "ae", "oe", "ei", "ea", "ia", "io", or "aea".

@@ -1,0 +1,1 @@
+Change the `find_managers_manager` method to `find_manager_n` which takes in a `name` and `n`, which is the number of managers (in depth) away from the given name to search for.

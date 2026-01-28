@@ -1,0 +1,2 @@
+Add a new type of intersection, 'Roundabout', which should reduce traffic by 30%. 
+Also, make the visitor actually recur through children intersections too.

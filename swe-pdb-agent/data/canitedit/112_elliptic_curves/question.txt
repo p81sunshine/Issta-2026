@@ -1,0 +1,1 @@
+Edit the code to include a new method `windowed_point_multiplication` that computes elliptic curve point multiplication using the windowing method. That is, given a window size w, precompute all 2^w powers the given point, and use the precomputed values in the double-and-add procedure. Ensure `generate_keypair` and `validate_keypair` use `windowed_point_multiplication`.

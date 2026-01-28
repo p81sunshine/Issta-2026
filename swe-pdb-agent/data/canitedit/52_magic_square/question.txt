@@ -1,0 +1,1 @@
+Add an `order` parameter to the magic square solver that can dynamically set the side length of the square.

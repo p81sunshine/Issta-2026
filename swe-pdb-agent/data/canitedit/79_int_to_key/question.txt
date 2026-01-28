@@ -1,0 +1,1 @@
+Fix the upper alpha numeric encode function to use upper alpha characters every 3 places, not 2

@@ -1,0 +1,1 @@
+Change the implementation such that `find_non_pair` only loops over the list once and uses constant memory.

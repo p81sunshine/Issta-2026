@@ -1,0 +1,1 @@
+Change `kl_div` to compute a monte carlo approximation of the kl divergence given `num_samples` as a parameter, which by default is set to 100000.

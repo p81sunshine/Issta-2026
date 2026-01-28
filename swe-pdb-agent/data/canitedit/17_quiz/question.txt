@@ -1,0 +1,1 @@
+Modify the `Quiz` class to allow the user to skip a question using `self.skip_question()`, and record the number of questions that were skipped in `self.skipped`.
