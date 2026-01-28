@@ -1,0 +1,114 @@
+# SWE-bench Debug-Gym PPO Trainer Configuration
+# 专门用于训练SWE-bench任务的Debug-Gym agent配置
+
+# 继承基础配置
+_base_: debug_gym_trainer.yaml
+
+# 覆盖环境配置以使用SWE-bench
+env:
+  name: swe_bench_debug_gym
+  env_args:
+    # SWE-bench数据集配置
+    dataset_id: "SWE-bench/SWE-bench_Verified"
+    dataset_revision: "99450355ca8c611021187a57ffac304b66666738"
+    split: "test"
+    instance_id: null  # null表示随机选择，或指定具体任务如"django__django-11099"
+    
+    # Debug-Gym配置
+    enable_pdb: true
+    enable_grep: true
+    enable_bash: false
+    persistent_breakpoints: true
+    auto_list: true
+    auto_eval_on_rewrite: true
+    run_timeout: 300  # SWE-bench任务可能需要更长时间
+    dir_tree_depth: 2
+    max_steps: 50
+    
+    # 后端配置
+    # 选项1: Docker后端（推荐，稳定）
+    backend: "docker"
+    # 注意：SWE-bench会自动选择正确的Docker镜像
+    # base_image字段会被SWE-bench在setup_task中设置
+    
+    # 选项2: Kubernetes后端（大规模训练）⭐
+    # backend: "kubernetes"
+    # k8s_namespace: "debug-gym-swe"
+    # k8s_pod_name: null  # 自动生成
+    # k8s_kubeconfig: null  # 使用默认
+    # k8s_pip_mirror: "https://mirrors.zju.edu.cn/pypi/web/simple"  # PyPI镜像源
+    # k8s_apt_mirror: "mirrors.zju.edu.cn"  # apt镜像源（加速apt-get install）
+    # 注意：K8s模式下，SWE-bench的Docker镜像会被自动使用
+    # 镜像源配置可大幅加速包安装（国内用户强烈推荐）
+
+# Agent配置（与debug_gym_agent相同）
+agent:
+  name: debug_gym_agent
+  max_steps: 50  # SWE-bench任务可能需要更多步骤
+  async_engine: false
+  trajectory_timeout: 1200  # 20分钟超时
+  normalize_step_advantage: true
+  use_stepwise_advantage: true
+  stepwise_advantage_mode: "broadcast"
+  agent_args:
+    use_fn_calling: false
+    format_model_response: false
+    show_directory_tree: true
+    show_current_breakpoints: true
+
+# 奖励函数（使用debug_gym的奖励函数）
+custom_reward_function:
+  path: rllm.rewards.debug_gym_reward
+  name: debug_gym_reward_fn
+
+# 数据配置
+data:
+  tokenizer: null
+  use_shm: False
+  # SWE-bench使用环境内的数据集，不需要外部parquet文件
+  train_files: null
+  val_files: null
+  prompt_key: problem_statement
+  reward_fn_key: data_source
+  max_prompt_length: 4096  # SWE-bench任务通常需要更长的提示
+  max_response_length: 2048
+  train_batch_size: 256  # SWE-bench任务较重，减小batch size
+  val_batch_size: null
+
+# 训练配置
+actor_rollout_ref:
+  model:
+    path: ~/models/deepseek-llm-7b-chat
+  actor:
+    ppo_mini_batch_size: 64  # 减小以适应SWE-bench
+    ppo_max_token_len_per_gpu: 32768
+    entropy_coeff: 0.01
+    optim:
+      lr: 3e-7  # 更小的学习率
+      lr_warmup_steps_ratio: 0.15
+  rollout:
+    temperature: 0.7
+    max_model_len: null
+
+trainer:
+  balance_batch: true
+  total_epochs: 50  # SWE-bench需要更多轮次
+  project_name: swe_bench_debug_gym_rl
+  experiment_name: swe_bench_ppo
+  logger: [ 'console', 'wandb' ]
+  log_val_generations: 3
+  nnodes: 1
+  n_gpus_per_node: 8
+  save_freq: 10
+  val_before_train: true
+  default_local_dir: checkpoints/${trainer.project_name}/${trainer.experiment_name}
+  max_actor_ckpt_to_keep: 5
+  max_critic_ckpt_to_keep: 5
+
+# 算法配置
+algorithm:
+  gamma: 1.0
+  lam: 0.95
+  adv_estimator: gae
+  use_kl_in_reward: false
+

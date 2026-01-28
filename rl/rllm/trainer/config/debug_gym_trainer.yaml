@@ -1,0 +1,339 @@
+# Debug-Gym PPO Trainer Configuration
+# 用于训练Debug-Gym任务的PPO配置
+
+data:
+  tokenizer: null
+  use_shm: False
+  train_files: ~/data/debug_gym/train.parquet  # 训练数据路径，需要自行准备
+  val_files: ~/data/debug_gym/val.parquet  # 验证数据路径
+  prompt_key: problem_statement  # 问题描述的键
+  reward_fn_key: data_source
+  max_prompt_length: 2048  # 更长的提示以容纳代码和错误信息
+  max_response_length: 1024  # 更长的响应以容纳调试步骤
+  train_batch_size: 512
+  val_batch_size: null
+  return_raw_input_ids: False
+  return_raw_chat: False
+  return_full_prompt: False
+  shuffle: True
+  filter_overlong_prompts: False
+  filter_overlong_prompts_workers: 1
+  truncation: error
+  image_key: images
+  video_key: videos
+  trust_remote_code: False
+  custom_cls:
+      path: null
+      name: null
+
+actor_rollout_ref:
+  hybrid_engine: True
+  model:
+    path: ~/models/deepseek-llm-7b-chat  # 或使用Qwen等模型
+    use_shm: False
+    external_lib: null
+    override_config: { }
+    enable_gradient_checkpointing: True
+    enable_activation_offload: False
+    use_remove_padding: False
+    lora_rank: 0  # 可以设置为32启用LoRA以节省内存
+    lora_alpha: 16
+    target_modules: all-linear
+    use_liger: False
+    use_fused_kernels: False
+    trust_remote_code: False
+  actor:
+    strategy: fsdp
+    ppo_mini_batch_size: 128
+    ppo_num_mini_batches: 1
+    ppo_micro_batch_size: null
+    ppo_micro_batch_size_per_gpu: null
+    use_dynamic_bsz: False
+    use_dynamic_mini_batch: False
+    ppo_max_token_len_per_gpu: 24576  # 增加token限制以适应长的调试会话
+    grad_clip: 1.0
+    clip_ratio: 0.2
+    clip_ratio_low: 0.2
+    clip_ratio_high: 0.2
+    clip_ratio_c: 3.0
+    loss_agg_mode: "token-mean"
+    entropy_coeff: 0.01  # 增加熵系数以鼓励探索
+    use_kl_loss: False
+    use_torch_compile: True
+    kl_loss_coef: 0.001
+    kl_loss_type: low_var_kl
+    ppo_epochs: 1
+    shuffle: False
+    ulysses_sequence_parallel_size: 1
+    checkpoint:
+      contents: ['model', 'optimizer', 'extra']
+    optim:
+      lr: 5e-7  # 较小的学习率以避免破坏预训练知识
+      lr_warmup_steps: -1
+      lr_warmup_steps_ratio: 0.1
+      min_lr_ratio: 0.1
+      num_cycles: 0.5
+      warmup_style: constant
+      total_training_steps: -1
+      weight_decay: 0.01
+    fsdp_config:
+      wrap_policy:
+        min_num_params: 0
+      param_offload: False
+      optimizer_offload: False
+      offload_policy: False
+      reshard_after_forward: True
+      fsdp_size: -1
+    grad_norm_threshold: 1e5
+  ref:
+    strategy: fsdp
+    fsdp_config:
+      param_offload: False
+      reshard_after_forward: True
+      wrap_policy:
+        min_num_params: 0
+    use_torch_compile: ${actor_rollout_ref.actor.use_torch_compile}
+    log_prob_micro_batch_size: null
+    log_prob_micro_batch_size_per_gpu: null
+    log_prob_use_dynamic_bsz: ${actor_rollout_ref.actor.use_dynamic_bsz}
+    log_prob_max_token_len_per_gpu: ${actor_rollout_ref.actor.ppo_max_token_len_per_gpu}
+    ulysses_sequence_parallel_size: ${actor_rollout_ref.actor.ulysses_sequence_parallel_size}
+  rollout:
+    name: vllm
+    mode: sync
+    chat_scheduler: null
+    chat_template: null
+    temperature: 0.7  # 适中的温度以平衡探索和确定性
+    top_k: -1
+    top_p: 0.95
+    use_fire_sampling: False
+    prompt_length: ${data.max_prompt_length}
+    response_length: ${data.max_response_length}
+    dtype: bfloat16
+    gpu_memory_utilization: 0.5
+    ignore_eos: False
+    enforce_eager: False
+    free_cache_engine: False
+    load_format: dummy_dtensor
+    layered_summon: False
+    tensor_model_parallel_size: 2
+    max_num_batched_tokens: 8192
+    max_model_len: null
+    max_num_seqs: 512
+    log_prob_micro_batch_size: null
+    log_prob_micro_batch_size_per_gpu: null
+    log_prob_use_dynamic_bsz: ${actor_rollout_ref.actor.use_dynamic_bsz}
+    log_prob_max_token_len_per_gpu: ${actor_rollout_ref.actor.ppo_max_token_len_per_gpu}
+    disable_log_stats: True
+    enable_chunked_prefill: True
+    do_sample: True
+    n: 1
+    engine_kwargs:
+      vllm:
+        swap_space: null
+      sglang:
+        attention_backend: null
+    val_kwargs:
+      top_k: -1
+      top_p: 1.0
+      temperature: 0
+      n: 1
+      do_sample: False
+    multi_turn: 
+      enable: False
+      max_turns: null
+      tool_config_path: null
+      format: chatml
+    disable_logging: True
+
+critic:
+  rollout_n: ${actor_rollout_ref.rollout.n}
+  strategy: fsdp
+  optim:
+    lr: 1e-5
+    lr_warmup_steps_ratio: 0.1
+    min_lr_ratio: 0.1
+    warmup_style: constant
+    total_training_steps: -1
+    weight_decay: 0.01
+  model:
+    path: ~/models/deepseek-llm-7b-chat
+    use_shm: False
+    tokenizer_path: ${actor_rollout_ref.model.path}
+    override_config: { }
+    external_lib: ${actor_rollout_ref.model.external_lib}
+    enable_gradient_checkpointing: True
+    enable_activation_offload: False
+    use_remove_padding: False
+    trust_remote_code: ${actor_rollout_ref.model.trust_remote_code}
+    fsdp_config:
+      param_offload: False
+      optimizer_offload: False
+      offload_policy: False
+      reshard_after_forward: True
+      wrap_policy:
+        min_num_params: 0
+      fsdp_size: -1
+    lora_rank: 0
+    lora_alpha: 16
+    target_modules: all-linear
+  ppo_mini_batch_size: ${actor_rollout_ref.actor.ppo_mini_batch_size}
+  ppo_micro_batch_size: null
+  ppo_micro_batch_size_per_gpu: null
+  forward_micro_batch_size: ${critic.ppo_micro_batch_size}
+  forward_micro_batch_size_per_gpu: ${critic.ppo_micro_batch_size_per_gpu}
+  use_dynamic_bsz: ${actor_rollout_ref.actor.use_dynamic_bsz}
+  ppo_max_token_len_per_gpu: 49152
+  forward_max_token_len_per_gpu: ${critic.ppo_max_token_len_per_gpu}
+  ulysses_sequence_parallel_size: 1
+  ppo_epochs: ${actor_rollout_ref.actor.ppo_epochs}
+  shuffle: ${actor_rollout_ref.actor.shuffle}
+  grad_clip: 1.0
+  cliprange_value: 0.5
+  loss_agg_mode: ${actor_rollout_ref.actor.loss_agg_mode}
+  checkpoint:
+    contents: ['model', 'optimizer', 'extra']
+
+reward_model:
+  enable: False
+  strategy: fsdp
+  model:
+    input_tokenizer: ${actor_rollout_ref.model.path}
+    path: ~/models/FsfairX-LLaMA3-RM-v0.1
+    use_shm: False
+    external_lib: ${actor_rollout_ref.model.external_lib}
+    use_remove_padding: False
+    use_fused_kernels: ${actor_rollout_ref.model.use_fused_kernels}
+    trust_remote_code: False
+    fsdp_config:
+      wrap_policy:
+        min_num_params: 0
+      param_offload: False
+      reshard_after_forward: True
+      fsdp_size: -1
+  micro_batch_size: null
+  micro_batch_size_per_gpu: null
+  max_length: null
+  ulysses_sequence_parallel_size: 1
+  use_dynamic_bsz: ${critic.use_dynamic_bsz}
+  forward_max_token_len_per_gpu: ${critic.forward_max_token_len_per_gpu}
+  reward_manager: naive
+  launch_reward_fn_async: False
+  sandbox_fusion:
+    url: null
+    max_concurrent: 64
+
+# 使用自定义的Debug-Gym奖励函数
+custom_reward_function:
+  path: rllm.rewards.debug_gym_reward
+  name: debug_gym_reward_fn
+
+algorithm:
+  gamma: 1.0
+  lam: 1.0
+  adv_estimator: gae
+  norm_adv_by_std_in_grpo: True
+  use_kl_in_reward: False
+  kl_penalty: kl
+  kl_ctrl:
+    type: fixed
+    kl_coef: 0.001
+    horizon: 10000
+    target_kl: 0.1
+  use_pf_ppo: False
+  pf_ppo:
+    reweight_method: pow
+    weight_pow: 2.0
+  mask_truncated_samples: True  # 对被截断的样本屏蔽梯度
+  clip_advantages: False
+
+trainer:
+  balance_batch: True
+  total_epochs: 20
+  total_training_steps: null
+  project_name: debug_gym_rl
+  experiment_name: debug_gym_ppo
+  logger: [ 'console', 'wandb' ]
+  log_val_generations: 5  # 记录一些验证生成结果以便调试
+  rollout_data_dir: null
+  validation_data_dir: null
+  nnodes: 1
+  n_gpus_per_node: 8
+  save_freq: 5  # 每5个epoch保存一次
+  resume_mode: auto
+  resume_from_path: null
+  val_before_train: True
+  test_freq: -1
+  critic_warmup: 0
+  default_hdfs_dir: null
+  del_local_ckpt_after_load: False
+  default_local_dir: checkpoints/${trainer.project_name}/${trainer.experiment_name}
+  max_actor_ckpt_to_keep: 3
+  max_critic_ckpt_to_keep: 3
+  ray_wait_register_center_timeout: 300
+  rejection_sample: False
+  rejection_sample_multiplier: 2
+  n_training_gpus_per_node: 4
+
+ray_init:
+  num_cpus: null
+
+# Debug-Gym环境配置
+env:
+  name: debug_gym
+  env_args:
+    path: null  # 代码仓库路径，将在运行时从数据中提取
+    entrypoint: "python -m pytest -sq ."
+    max_score: null  # 将从环境中自动计算
+    auto_eval_on_rewrite: True
+    run_timeout: 120
+    dir_tree_depth: 2
+    persistent_breakpoints: True
+    auto_list: True
+    enable_pdb: True
+    enable_grep: True
+    enable_bash: False
+    max_steps: 30  # 最大调试步数
+    
+    # 运行后端配置
+    # 选项1: 本地运行（默认，快速开发）
+    backend: "local"  # "local", "docker", "kubernetes"
+    
+    # 选项2: Docker运行（生产训练，环境隔离）
+    # backend: "docker"
+    # base_image: "python:3.12"
+    # setup_commands:
+    #   - "pip install pytest numpy pandas"
+    #   - "apt-get update && apt-get install -y git"
+    
+    # 选项3: Kubernetes运行（大规模分布式训练）
+    # backend: "kubernetes"
+    # base_image: "python:3.12"
+    # k8s_namespace: "debug-gym"
+    # k8s_pod_name: null  # null表示自动生成
+    # k8s_kubeconfig: null  # null使用默认kubeconfig
+    
+    # 选项4: 自定义Terminal配置（高级用法）
+    # terminal_config:
+    #   type: "docker"  # 或 "local"
+    #   base_image: "python:3.12"
+    #   setup_commands:
+    #     - "pip install -r requirements.txt"
+
+# Debug-Gym Agent配置
+agent:
+  name: debug_gym_agent
+  max_steps: 30  # 最大步数
+  async_engine: False  # Debug-Gym环境是同步的
+  trajectory_timeout: 600  # 轨迹超时（秒）
+  overlong_filter: False
+  normalize_step_advantage: True  # 归一化步骤优势
+  use_stepwise_advantage: True  # 使用逐步优势
+  stepwise_advantage_mode: "broadcast"  # 广播优势到所有步骤
+  agent_args:
+    use_fn_calling: False
+    format_model_response: False
+    show_directory_tree: True
+    show_current_breakpoints: True
+  engine_args: {}
+

@@ -1,0 +1,22 @@
+# Core dependencies for SWE-PDB-Agent
+accelerate==1.10.1
+anthropic==0.51.0
+datasets==2.19.0
+debug-gym==1.2.0
+deepspeed==0.18.0
+docker==7.1.0
+evaluate==0.4.6
+gym==0.26.2
+gymnasium==1.2.1
+jinja2==3.1.6
+openai==1.99.9
+pandas==2.3.3
+pytest==8.3.5
+pytest-timeout==2.4.0
+pyyaml==6.0.2
+rich==14.0.0
+swebench==4.0.3
+swesmith==0.0.4
+torch==2.6.0
+transformers==4.57.3
+tqdm==4.67.1

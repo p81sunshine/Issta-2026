@@ -1,0 +1,33 @@
+base:
+    output_path: "exps/mbpp-buggy"
+    benchmark: "kodcode"
+    problems: "all"
+    env_kwargs: {
+        "entrypoint": "python -m pytest --tb=short -sq test.py",
+        "data_path": "data/mbpp_buggy",
+        "dir_tree_depth": 1,
+        "run_timeout": 30,
+        "auto_eval_on_rewrite": False,
+        "show_current_breakpoints": False,
+        "show_directory_tree": True,
+        "persistent_breakpoints": True,
+        "auto_list": False,
+    }
+    terminal: {
+        type: "local",
+    }
+
+    llm_name: "human"
+
+    random_seed: 42
+    max_steps: 80
+    max_rewrite_steps: 10
+    memory_size: 80
+    save_patch: True
+    reset_prompt_history_after_rewrite: False
+
+rewrite_agent:
+    tools: ["grep", "view", "rewrite", "eval"]
+
+debug_agent:
+    tools: ["grep", "pdb", "view", "rewrite", "eval"]

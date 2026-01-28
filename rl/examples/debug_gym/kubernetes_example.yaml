@@ -1,0 +1,66 @@
+# Debug-Gym Kubernetes配置示例
+# 用于在Kubernetes集群上训练Debug-Gym agent
+
+# 继承基础配置
+_base_: debug_gym_trainer.yaml
+
+# 覆盖环境配置以使用Kubernetes
+env:
+  name: debug_gym
+  env_args:
+    # 使用Kubernetes后端
+    backend: "kubernetes"
+    
+    # Kubernetes配置
+    k8s_namespace: "debug-gym"  # K8s命名空间
+    k8s_pod_name: null  # null = 自动生成唯一名称
+    k8s_kubeconfig: null  # null = 使用默认配置
+    
+    # 容器镜像配置
+    base_image: "python:3.12"  # 或自定义镜像
+    
+    # Debug-Gym配置
+    path: null
+    entrypoint: "python -m pytest -sq ."
+    max_score: null
+    auto_eval_on_rewrite: true
+    run_timeout: 120
+    dir_tree_depth: 2
+    persistent_breakpoints: true
+    auto_list: true
+    enable_pdb: true
+    enable_grep: true
+    enable_bash: false
+    max_steps: 30
+
+# Agent配置
+agent:
+  name: debug_gym_agent
+  max_steps: 30
+  async_engine: false
+  trajectory_timeout: 600
+  normalize_step_advantage: true
+  use_stepwise_advantage: true
+  stepwise_advantage_mode: "broadcast"
+  agent_args:
+    use_fn_calling: false
+    format_model_response: false
+    show_directory_tree: true
+    show_current_breakpoints: true
+
+# 训练配置（针对K8s优化）
+trainer:
+  balance_batch: true
+  total_epochs: 30
+  project_name: debug_gym_k8s
+  experiment_name: debug_gym_ppo_k8s
+  logger: [ 'console', 'wandb' ]
+  log_val_generations: 5
+  nnodes: 1  # 可以增加节点数以扩展
+  n_gpus_per_node: 8
+  save_freq: 5
+  val_before_train: true
+  default_local_dir: checkpoints/${trainer.project_name}/${trainer.experiment_name}
+
+
+
