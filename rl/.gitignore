@@ -174,8 +174,10 @@ cython_debug/
 # DS_Store
 .DS_Store
 
-# Ignore parquet files.
-data/* 
+# Ignore parquet files (but allow specific ones for paper reproduction)
+data/*
+!data/*.parquet
+!data/*.parquet* 
 
 # Ignore verl script outputs.
 **/outputs/
@@ -194,7 +196,10 @@ rllm/data/train/
 rllm/data/datasets/
 rllm/registry/
 
+# Ignore data directory but allow parquet files
 data/
+!data/*.parquet
+!data/*.parquet*
 
 train_trajectories/
 

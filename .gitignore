@@ -33,8 +33,7 @@ wandb/
 # Logs
 conversation_logs/
 
-# Data files (large parquet files)
-*.parquet
+# Data files (exclude large model files)
 *.pkl
 *.bin
 *.safetensors
