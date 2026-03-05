@@ -11,12 +11,6 @@ This repository consists of three main components:
 
 An evaluation framework built on top of [debug-gym](https://github.com/microsoft/debug-gym), focusing on debugging tasks using the PDB debugger.
 
-**Key Features:**
-- Interactive debugging environment with PDB tool support
-- Multiple evaluation datasets (1,600+ debugging problems)
-- Support for various agents (debug_agent, rewrite_agent)
-- Complete result collection and summarization
-
 **Datasets Included:**
 - CaniEdit (106 problems)
 - DebugBench (1,128 problems)
@@ -117,10 +111,6 @@ cd swe-pdb-agent
 
 # Run on a single dataset
 python scripts/run.py scripts/config_edit.yaml --agent debug_agent
-
-# Run with a specific LLM
-python scripts/run.py scripts/config_edit.yaml --agent debug_agent \
-    -p base.llm_name="gpt-4o"
 ```
 
 ### Step 2: Train Your Own Model (SFT)

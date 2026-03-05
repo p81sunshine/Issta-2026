@@ -16,11 +16,6 @@ Reinforcement Learning training code for SWE-PDB agent, based on RLLM framework.
 ```bash
 # Option 1: Use the r2llm conda environment (recommended)
 conda activate r2llm
-
-# Option 2: Create new environment
-conda create -n swe-pdb-rl python=3.10
-conda activate swe-pdb-rl
-
 # Install RLLM framework
 pip install -e .
 ```
@@ -148,19 +143,6 @@ Edit the `CUDA_VISIBLE_DEVICES` line in each script to specify which GPUs to use
 export CUDA_VISIBLE_DEVICES=0,1,2,3  # Use first 4 GPUs
 ```
 
-### Running Evaluation
-
-#### Run KodCode Environment
-
-```bash
-cd examples/swe-pdb
-python run_kod_debug_gym.py \
-    --parquet_path ../data/rl_train.parquets \
-    --model_name /path/to/model \
-    --base_url http://localhost:2331/v1 \
-    --n_parallel 8 \
-    --max_steps 60
-```
 
 ## Training Algorithm
 

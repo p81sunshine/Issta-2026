@@ -11,7 +11,7 @@ PROJECT_NAME=swe-pdb-sft
 EXP_NAME=swe-pdb-qwen3-14b-1213
 
 # Checkpoint path - use environment variable or default
-SWE_PDB_CHECKPOINT_BASE="${SWE_PDB_CHECKPOINT_BASE:-/data/jiaxingliu/checkpoints}"
+SWE_PDB_CHECKPOINT_BASE="${SWE_PDB_CHECKPOINT_BASE}"
 save_path=${SWE_PDB_CHECKPOINT_BASE}/${PROJECT_NAME}/${EXP_NAME}
 
 export CUDA_VISIBLE_DEVICES=4,5,6,7
